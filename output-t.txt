@@ -1,0 +1,40 @@
+Process 0 [INTERACTIVE]:
+    Thread 0:  ARR: 0      CPU: 8      I/O: 11     TRT: 88     END: 88    
+    Thread 1:  ARR: 1      CPU: 9      I/O: 2      TRT: 59     END: 60    
+
+Process 1 [SYSTEM]:
+    Thread 0:  ARR: 5      CPU: 8      I/O: 3      TRT: 92     END: 97    
+    Thread 1:  ARR: 6      CPU: 5      I/O: 2      TRT: 69     END: 75    
+    Thread 2:  ARR: 7      CPU: 23     I/O: 16     TRT: 123    END: 130   
+
+SIMULATION COMPLETED!
+
+SYSTEM THREADS:
+    Total count:                3
+    Avg response time:      23.33
+    Avg turnaround time:    94.67
+
+INTERACTIVE THREADS:
+    Total count:                2
+    Avg response time:      10.00
+    Avg turnaround time:    73.50
+
+NORMAL THREADS:
+    Total count:                0
+    Avg response time:       0.00
+    Avg turnaround time:     0.00
+
+BATCH THREADS:
+    Total count:                0
+    Avg response time:       0.00
+    Avg turnaround time:     0.00
+
+Total elapsed time:           130
+Total service time:            53
+Total I/O time:                34
+Total dispatch time:           69
+Total idle time:                8
+
+CPU utilization:           93.85%
+CPU efficiency:            40.77%
+

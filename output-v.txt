@@ -1,0 +1,331 @@
+At time 0:
+    THREAD_ARRIVED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from NEW to READY
+
+At time 0:
+    DISPATCHER_INVOKED
+    Thread 0 in process 0 [INTERACTIVE]
+    Selected from 1 threads; will run to completion of burst
+
+At time 1:
+    THREAD_ARRIVED
+    Thread 1 in process 0 [INTERACTIVE]
+    Transitioned from NEW to READY
+
+At time 5:
+    THREAD_ARRIVED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from NEW to READY
+
+At time 6:
+    THREAD_ARRIVED
+    Thread 1 in process 1 [SYSTEM]
+    Transitioned from NEW to READY
+
+At time 7:
+    PROCESS_DISPATCH_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from READY to RUNNING
+
+At time 7:
+    THREAD_ARRIVED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from NEW to READY
+
+At time 11:
+    CPU_BURST_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from RUNNING to BLOCKED
+
+At time 11:
+    DISPATCHER_INVOKED
+    Thread 1 in process 0 [INTERACTIVE]
+    Selected from 4 threads; will run to completion of burst
+
+At time 14:
+    THREAD_DISPATCH_COMPLETED
+    Thread 1 in process 0 [INTERACTIVE]
+    Transitioned from READY to RUNNING
+
+At time 16:
+    CPU_BURST_COMPLETED
+    Thread 1 in process 0 [INTERACTIVE]
+    Transitioned from RUNNING to BLOCKED
+
+At time 16:
+    DISPATCHER_INVOKED
+    Thread 0 in process 1 [SYSTEM]
+    Selected from 3 threads; will run to completion of burst
+
+At time 16:
+    IO_BURST_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from BLOCKED to READY
+
+At time 18:
+    IO_BURST_COMPLETED
+    Thread 1 in process 0 [INTERACTIVE]
+    Transitioned from BLOCKED to READY
+
+At time 23:
+    PROCESS_DISPATCH_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 27:
+    CPU_BURST_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 27:
+    DISPATCHER_INVOKED
+    Thread 1 in process 1 [SYSTEM]
+    Selected from 4 threads; will run to completion of burst
+
+At time 28:
+    IO_BURST_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 30:
+    THREAD_DISPATCH_COMPLETED
+    Thread 1 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 32:
+    CPU_BURST_COMPLETED
+    Thread 1 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 32:
+    DISPATCHER_INVOKED
+    Thread 2 in process 1 [SYSTEM]
+    Selected from 4 threads; will run to completion of burst
+
+At time 34:
+    IO_BURST_COMPLETED
+    Thread 1 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 35:
+    THREAD_DISPATCH_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 40:
+    CPU_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 40:
+    DISPATCHER_INVOKED
+    Thread 0 in process 0 [INTERACTIVE]
+    Selected from 4 threads; will run to completion of burst
+
+At time 47:
+    PROCESS_DISPATCH_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from READY to RUNNING
+
+At time 47:
+    IO_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 50:
+    CPU_BURST_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from RUNNING to BLOCKED
+
+At time 50:
+    DISPATCHER_INVOKED
+    Thread 1 in process 0 [INTERACTIVE]
+    Selected from 4 threads; will run to completion of burst
+
+At time 53:
+    THREAD_DISPATCH_COMPLETED
+    Thread 1 in process 0 [INTERACTIVE]
+    Transitioned from READY to RUNNING
+
+At time 56:
+    IO_BURST_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from BLOCKED to READY
+
+At time 60:
+    THREAD_COMPLETED
+    Thread 1 in process 0 [INTERACTIVE]
+    Transitioned from RUNNING to EXIT
+
+At time 60:
+    DISPATCHER_INVOKED
+    Thread 0 in process 1 [SYSTEM]
+    Selected from 4 threads; will run to completion of burst
+
+At time 67:
+    PROCESS_DISPATCH_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 69:
+    CPU_BURST_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 69:
+    DISPATCHER_INVOKED
+    Thread 1 in process 1 [SYSTEM]
+    Selected from 3 threads; will run to completion of burst
+
+At time 71:
+    IO_BURST_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 72:
+    THREAD_DISPATCH_COMPLETED
+    Thread 1 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 75:
+    THREAD_COMPLETED
+    Thread 1 in process 1 [SYSTEM]
+    Transitioned from RUNNING to EXIT
+
+At time 75:
+    DISPATCHER_INVOKED
+    Thread 2 in process 1 [SYSTEM]
+    Selected from 3 threads; will run to completion of burst
+
+At time 78:
+    THREAD_DISPATCH_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 80:
+    CPU_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 80:
+    DISPATCHER_INVOKED
+    Thread 0 in process 0 [INTERACTIVE]
+    Selected from 2 threads; will run to completion of burst
+
+At time 81:
+    IO_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 87:
+    PROCESS_DISPATCH_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from READY to RUNNING
+
+At time 88:
+    THREAD_COMPLETED
+    Thread 0 in process 0 [INTERACTIVE]
+    Transitioned from RUNNING to EXIT
+
+At time 88:
+    DISPATCHER_INVOKED
+    Thread 0 in process 1 [SYSTEM]
+    Selected from 2 threads; will run to completion of burst
+
+At time 95:
+    PROCESS_DISPATCH_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 97:
+    THREAD_COMPLETED
+    Thread 0 in process 1 [SYSTEM]
+    Transitioned from RUNNING to EXIT
+
+At time 97:
+    DISPATCHER_INVOKED
+    Thread 2 in process 1 [SYSTEM]
+    Selected from 1 threads; will run to completion of burst
+
+At time 100:
+    THREAD_DISPATCH_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 108:
+    CPU_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 109:
+    IO_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 109:
+    DISPATCHER_INVOKED
+    Thread 2 in process 1 [SYSTEM]
+    Selected from 1 threads; will run to completion of burst
+
+At time 112:
+    THREAD_DISPATCH_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 117:
+    CPU_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from RUNNING to BLOCKED
+
+At time 124:
+    IO_BURST_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from BLOCKED to READY
+
+At time 124:
+    DISPATCHER_INVOKED
+    Thread 2 in process 1 [SYSTEM]
+    Selected from 1 threads; will run to completion of burst
+
+At time 127:
+    THREAD_DISPATCH_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from READY to RUNNING
+
+At time 130:
+    THREAD_COMPLETED
+    Thread 2 in process 1 [SYSTEM]
+    Transitioned from RUNNING to EXIT
+
+SIMULATION COMPLETED!
+
+SYSTEM THREADS:
+    Total count:                3
+    Avg response time:      23.33
+    Avg turnaround time:    94.67
+
+INTERACTIVE THREADS:
+    Total count:                2
+    Avg response time:      10.00
+    Avg turnaround time:    73.50
+
+NORMAL THREADS:
+    Total count:                0
+    Avg response time:       0.00
+    Avg turnaround time:     0.00
+
+BATCH THREADS:
+    Total count:                0
+    Avg response time:       0.00
+    Avg turnaround time:     0.00
+
+Total elapsed time:           130
+Total service time:            53
+Total I/O time:                34
+Total dispatch time:           69
+Total idle time:                8
+
+CPU utilization:           93.85%
+CPU efficiency:            40.77%
+s
