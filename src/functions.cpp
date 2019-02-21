@@ -39,46 +39,6 @@ int writeOutput(Simulation sim, bool verbose, bool per_thread) {
 		return -1;
 	}
 
-	fileOut << "SIMULATION COMPLETED!\n" << endl;
-	for (int i = 0; i < 4; i++) {
-		fileOut << getPType(i) << " THREADS:" << endl;
-		fileOut << setw(27) << left << "\tTotal count:" << right << sim.thread_types[i] << endl;
-		if (sim.thread_types[i] == 0) {
-			fileOut << setw(27) << left << "\tAvg response time:" << right << 0 << endl;
-			fileOut << setw(27) << left << "\tAvg turnaround time:" << right << 0 << endl;
-		}
-		else {
-			fileOut << setw(27) << left << "\tAvg response time:" << right << (double) sim.avg_res_times[i] / (double) sim.thread_types[i] << endl;
-			fileOut << setw(27) << left << "\tAvg turnaround time:" << right << (double) sim.avg_trt_times[i] / (double) sim.thread_types[i] << endl;
-		}
-	}
-	fileOut << setw(34) << left << "Total elapsed time:" << right << sim.time << endl;
-	fileOut << setw(34) << left << "Total service time:" << right << sim.service_time << endl;
-	fileOut << setw(34) << left << "Total I/O time:" << right << sim.IO_time << endl;
-	fileOut << setw(34) << left << "Total dispatch time:" << right << sim.IO_time << endl;
-	fileOut << setw(34) << left << "Total idle time:" << right << sim.idle_time << endl;
-	fileOut << endl;
-	fileOut << setw(34) << left << "CPU utilization:" << right << sim.utilization << "%" << endl;
-	fileOut << setw(34) << left << "CPU efficiency:" << right << sim.efficiency << "%" << endl;
-	fileOut << endl;
-	
-	// Verbose output
-	if (verbose) {
-		fileOut << endl;
-		for (int x = 0; x < sim.time; x++) {
-			for (int i = 0; i < sim.events.size(); i++) {
-				if (sim.events[i].time == x) {
-					fileOut << "At time " << sim.events[i].time << ":" << endl
-						<< "\t" << sim.events[i].event_name << endl
-						<< "\tThread " << sim.events[i].thread_id
-						<< " in process " << sim.events[i].process_id << " ["
-						<< sim.events[i].thread_type << "]" << endl
-						<< "\t" << sim.events[i].msg << endl;
-				}
-			}
-		}
-	}
-
 	if (per_thread) {
 		fileOut << endl;
 		for (int i = 0; i < sim.num_processes; i++) {
@@ -92,6 +52,47 @@ int writeOutput(Simulation sim, bool verbose, bool per_thread) {
 					<< "\tEND: " << sim.processes[i].threads[j].end_time << endl;
 			}
 			fileOut << endl;
+		}
+	}
+
+	fileOut << "SIMULATION COMPLETED!\n" << endl;
+	for (int i = 0; i < 4; i++) {
+		fileOut << getPType(i) << " THREADS:" << endl;
+		fileOut << setw(27) << left << "\tTotal count:" << right << sim.thread_types[i] << endl;
+		if (sim.thread_types[i] == 0) {
+			fileOut << setw(27) << left << "\tAvg response time:" << right << 0 << endl;
+			fileOut << setw(27) << left << "\tAvg turnaround time:" << right << 0 << endl;
+		}
+		else {
+			fileOut << setw(27) << left << "\tAvg response time:" << right << (double) sim.avg_res_times[i] / (double) sim.thread_types[i] << endl;
+			fileOut << setw(27) << left << "\tAvg turnaround time:" << right << (double) sim.avg_trt_times[i] / (double) sim.thread_types[i] << endl;
+		}
+	}
+	fileOut << endl;
+	fileOut << setw(34) << left << "Total elapsed time:" << right << sim.time << endl;
+	fileOut << setw(34) << left << "Total service time:" << right << sim.service_time << endl;
+	fileOut << setw(34) << left << "Total I/O time:" << right << sim.IO_time << endl;
+	fileOut << setw(34) << left << "Total dispatch time:" << right << sim.IO_time << endl;
+	fileOut << setw(34) << left << "Total idle time:" << right << sim.idle_time << endl;
+	fileOut << endl;
+	fileOut << setw(34) << left << "CPU utilization:" << right << sim.utilization << "%" << endl;
+	fileOut << setw(34) << left << "CPU efficiency:" << right << sim.efficiency << "%" << endl;
+	fileOut << endl;
+	
+	// Verbose output
+	if (verbose) {
+		//fileOut << endl;
+		for (int x = 0; x < sim.time; x++) {
+			for (int i = 0; i < sim.events.size(); i++) {
+				if (sim.events[i].time == x) {
+					fileOut << "At time " << sim.events[i].time << ":" << endl
+						<< "\t" << sim.events[i].event_name << endl
+						<< "\tThread " << sim.events[i].thread_id
+						<< " in process " << sim.events[i].process_id << " ["
+						<< sim.events[i].thread_type << "]" << endl
+						<< "\t" << sim.events[i].msg << "\n" << endl;
+				}
+			}
 		}
 	}
 
