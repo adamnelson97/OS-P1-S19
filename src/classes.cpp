@@ -82,24 +82,72 @@ Simulation::Simulation(ifstream& input) {
 	this->service_time = 0;
 	this->IO_time = 0;
 	this->idle_time = 0;
+	this->curr_process_id = -1;
+	this->thread_processing = false;
 
 }
 
 void Simulation::iterateFCFS() {
 	while (!threadQueue.empty()) {
-		for (int i = 0; i < threadQueue.size(); i++) {
-			Thread thread = threadQueue.front(); // Gets the next thread from the queue
-			threadQueue.pop(); // Removes thread from the queue
-			if (time == thread.arrival_time) {
-				Event event(thread.arrival_time, "THREAD_ARRIVED", thread, threadQueue.size());
-				events.push_back(event);
-			}
-			else {
-				threadQueue.push(thread);
-				// Adds the thread back to the queue if it's not the arrival time
-			}
+		prevThread = currThread;
+		currThread = threadQueue.front();
+		threadQueue.pop();
+		if (time == currThread.arrival_time) {
+			Event event(currThread.arrival_time, "THREAD_ARRIVED", currThread, threadQueue.size());
+			events.push_back(event);
 		}
-		time++;
+		Event event(time, "DISPATCHER_INVOKED", currThread, threadQueue.size());
+		events.push_back(event);
+		if (prevThread.process_id != currThread.process_id) {
+			time += process_overhead;
+			dispatch_time += process_overhead;
+			Event event(time, "PROCESS_DISPATCH_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+		else {
+			time += thread_overhead;
+			dispatch_time += thread_overhead;
+			Event event(time, "THREAD_DISPATCH_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+		if (currThread.start_time == -1) {
+			currThread.start_time = time;
+			currThread.response_time = currThread.start_time - currThread.arrival_time;
+			avg_res_times[currThread.type] += currThread.response_time;
+		}
+
+		if (currThread.currBurst < currThread.num_bursts - 1) {
+			time += currThread.bursts[currThread.currBurst].CPU_time;
+			service_time += currThread.bursts[currThread.currBurst].CPU_time;
+			currThread.total_CPU_time += currThread.bursts[currThread.currBurst].CPU_time;
+			Event event(time, "CPU_BURST_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+			blockThreads.push_back(currThread);
+		}
+		else {
+			time += currThread.bursts[currThread.currBurst].CPU_time;
+			service_time += currThread.bursts[currThread.currBurst].CPU_time;
+			currThread.total_CPU_time += currThread.bursts[currThread.currBurst].CPU_time;
+			currThread.end_time = time;
+			currThread.turn_around_time = currThread.end_time - currThread.arrival_time;
+			avg_trt_times[currThread.type] += currThread.turn_around_time;
+			processes[currThread.process_id].threads[currThread.thread_id] = currThread;
+			Event event(time, "THREAD_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+
+		for (int i = 0; i < blockThreads.size(); i++) {
+			IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			if (threadQueue.empty()) {
+				time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			}
+			blockThreads[i].total_IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			Event event(time, "IO_BURST_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+			blockThreads[i].currBurst++;
+			threadQueue.push(blockThreads[i]);
+		}
+		blockThreads.clear();
 	}
 
 	idle_time = time - dispatch_time - service_time;

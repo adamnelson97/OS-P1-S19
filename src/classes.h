@@ -78,8 +78,12 @@ public:
 	vector<Thread> blockThreads;
 	Thread currThread;
 	Thread prevThread;
+	int curr_process_id;
+	bool diff_process;
 	bool all_threads_complete;
 	int time;
+	int overhead_counter;
+	bool thread_processing;
 	int dispatch_time;
 	int service_time;
 	int IO_time;
