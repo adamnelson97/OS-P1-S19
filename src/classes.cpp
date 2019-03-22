@@ -223,7 +223,7 @@ void Simulation::iterateRR() {
 				events.push_back(event);
 			}
 		}
-		for (int i = 0; i < (int)blockThreads.size(); i++) {
+		for (int i = 0; i < blockThreads.size(); i++) {
 			currThread.total_IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
 			if (threadQueue.empty()) {
 				time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
@@ -237,9 +237,9 @@ void Simulation::iterateRR() {
 		blockThreads.clear();
 	}
 
-	idle_time = (time - dispatch_time) - service_time;
-	utilization = 100*((float)time - (float)idle_time)/(float)time;
-	efficiency = 100*(float)service_time/(float)time; 
+	idle_time = time - dispatch_time - service_time;
+	utilization = 100 * ((float) (time - idle_time)) / (float)time;
+	efficiency = 100 * (float) service_time / (float) time; 
 }
 
 
