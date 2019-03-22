@@ -20,6 +20,7 @@ functions.cpp: Contains the functions described in functions.h.
 
 === Hour Approximation ===
 
+I spent roughly 15 hours on this project.
 
 === Custom Algorithm ===
 
