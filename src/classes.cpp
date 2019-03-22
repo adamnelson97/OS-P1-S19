@@ -88,6 +88,7 @@ Simulation::Simulation(ifstream& input) {
 
 }
 
+// DON'T CHANGE
 void Simulation::iterateFCFS() {
 	for (int i = 0; i < threadVec.size(); i++) {
 		Event event(threadVec[i].arrival_time, "THREAD_ARRIVED", threadVec[i], threadQueue.size());
@@ -158,8 +159,91 @@ void Simulation::iterateFCFS() {
 	efficiency = 100 * (float) service_time / (float) time; 
 }
 
-void Simulation::iterateRR() {}
+void Simulation::iterateRR() {
+	while (!threadQueue.empty()) {
+		prevThread = currThread;
+		currThread = threadQueue.front();
+		threadQueue.pop();
+		
+		Event event(time, "DISPATCHER_INVOKED", currThread, threadQueue.size());
+		events.push_back(event);
 
+		if (prevThread.process_id != currThread.process_id) {
+			time += process_overhead;
+			dispatch_time += process_overhead;
+			Event event(time, "PROCESS_DISPATCH_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+		else {
+			time += thread_overhead;
+			dispatch_time += thread_overhead;
+			Event event(time, "THREAD_DISPATCH_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+		if (currThread.start_time == -1) {
+			currThread.start_time = time;
+			currThread.response_time = currThread.start_time - currThread.arrival_time;
+		}
+		if (currThread.currBurst < currThread.num_bursts - 1) {
+			if (currThread.bursts[currThread.currBurst].CPU_time > 3) {
+				currThread.bursts[currThread.currBurst].CPU_time -= 3;
+				time += 3;
+				service_time += 3;
+				currThread.total_CPU_time += 3;
+				Event event(time, "THREAD_PREEMPTED", currThread, threadQueue.size());
+				events.push_back(event);
+				threadQueue.push(currThread);
+			}
+			else {
+				time += currThread.bursts[currThread.currBurst].CPU_time;
+				service_time += currThread.bursts[currThread.currBurst].CPU_time;
+				currThread.total_CPU_time += currThread.bursts[currThread.currBurst].CPU_time;
+				Event event(time, "CPU_BURST_COMPLETED", currThread, threadQueue.size());
+				events.push_back(event);
+				blockThreads.push_back(currThread);
+			}
+		}
+		else {
+			if (currThread.bursts[currThread.currBurst].CPU_time > 3) {
+				currThread.bursts[currThread.currBurst].CPU_time -= 3;
+				time += 3;
+				service_time += 3;
+				currThread.total_CPU_time += 3;
+				Event event(time, "THREAD_PREEMPTED", currThread, threadQueue.size());
+				events.push_back(event);
+				threadQueue.push(currThread);
+			}
+			else {
+				time += currThread.bursts[currThread.currBurst].CPU_time;
+				service_time += currThread.bursts[currThread.currBurst].CPU_time;
+				currThread.total_CPU_time += currThread.bursts[currThread.currBurst].CPU_time;
+				currThread.end_time = time;
+				currThread.turn_around_time = currThread.end_time - currThread.arrival_time;
+				Event event(time, "THREAD_COMPLETED", currThread, threadQueue.size());
+				events.push_back(event);
+			}
+		}
+		for (int i = 0; i < (int)blockThreads.size(); i++) {
+			currThread.total_IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			if (threadQueue.empty()) {
+				time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			}
+			blockThreads[i].total_IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			Event event(time, "IO_BURST_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+			blockThreads[i].currBurst++;
+			threadQueue.push(blockThreads[i]);
+		}
+		blockThreads.clear();
+	}
+
+	idle_time = (time - dispatch_time) - service_time;
+	utilization = 100*((float)time - (float)idle_time)/(float)time;
+	efficiency = 100*(float)service_time/(float)time; 
+}
+
+
+// DON'T CHANGE
 void Simulation::iteratePriority() {
 	for (int i = 0; i < threadVec.size(); i++) {
 		Event event(threadVec[i].arrival_time, "THREAD_ARRIVED", threadVec[i], threadQueue.size());
