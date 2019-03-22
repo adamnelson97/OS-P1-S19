@@ -70,6 +70,7 @@ Simulation::Simulation(ifstream& input) {
 
 			process.threads.push_back(thread); // Add thread to process object
 			this->threadQueue.push(thread); // Adds thread to simulation queue
+			this->threadVec.push_back(thread); // Adds thread to simulation vector
 			if (thread.type == 0) { sysQueue.push(thread); }
 			if (thread.type == 1) { intQueue.push(thread); }
 			if (thread.type == 2) { normQueue.push(thread); }
@@ -88,14 +89,16 @@ Simulation::Simulation(ifstream& input) {
 }
 
 void Simulation::iterateFCFS() {
+	for (int i = 0; i < threadVec.size(); i++) {
+		Event event(threadVec[i].arrival_time, "THREAD_ARRIVED", threadVec[i], threadQueue.size());
+		events.push_back(event);
+	}
+
 	while (!threadQueue.empty()) {
 		prevThread = currThread;
 		currThread = threadQueue.front();
 		threadQueue.pop();
-		if (time == currThread.arrival_time) {
-			Event event(currThread.arrival_time, "THREAD_ARRIVED", currThread, threadQueue.size());
-			events.push_back(event);
-		}
+		
 		Event event(time, "DISPATCHER_INVOKED", currThread, threadQueue.size());
 		events.push_back(event);
 		if (prevThread.process_id != currThread.process_id) {
@@ -156,5 +159,100 @@ void Simulation::iterateFCFS() {
 }
 
 void Simulation::iterateRR() {}
-void Simulation::iteratePriority() {}
+
+void Simulation::iteratePriority() {
+	for (int i = 0; i < threadVec.size(); i++) {
+		Event event(threadVec[i].arrival_time, "THREAD_ARRIVED", threadVec[i], threadQueue.size());
+		events.push_back(event);
+	}
+
+	// Re-order threads in queue based on priority
+	while (!threadQueue.empty()) threadQueue.pop(); // Clear queue
+	while (!sysQueue.empty()) {
+		threadQueue.push(sysQueue.front());
+		sysQueue.pop();
+	}
+	while (!intQueue.empty()) {
+		threadQueue.push(intQueue.front());
+		intQueue.pop();
+	}
+	while (!normQueue.empty()) {
+		threadQueue.push(normQueue.front());
+		normQueue.pop();
+	}
+	while (!batQueue.empty()) {
+		threadQueue.push(batQueue.front());
+		batQueue.pop();
+	}
+
+
+	for (int i = 0; i < threadVec.size(); i++) {
+		Event event(threadVec[i].arrival_time, "THREAD_ARRIVED", threadVec[i], threadQueue.size());
+		events.push_back(event);
+	}
+
+	while (!threadQueue.empty()) {
+		prevThread = currThread;
+		currThread = threadQueue.front();
+		threadQueue.pop();
+		
+		Event event(time, "DISPATCHER_INVOKED", currThread, threadQueue.size());
+		events.push_back(event);
+		if (prevThread.process_id != currThread.process_id) {
+			time += process_overhead;
+			dispatch_time += process_overhead;
+			Event event(time, "PROCESS_DISPATCH_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+		else {
+			time += thread_overhead;
+			dispatch_time += thread_overhead;
+			Event event(time, "THREAD_DISPATCH_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+		if (currThread.start_time == -1) {
+			currThread.start_time = time;
+			currThread.response_time = currThread.start_time - currThread.arrival_time;
+			avg_res_times[currThread.type] += currThread.response_time;
+		}
+
+		if (currThread.currBurst < currThread.num_bursts - 1) {
+			time += currThread.bursts[currThread.currBurst].CPU_time;
+			service_time += currThread.bursts[currThread.currBurst].CPU_time;
+			currThread.total_CPU_time += currThread.bursts[currThread.currBurst].CPU_time;
+			Event event(time, "CPU_BURST_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+			blockThreads.push_back(currThread);
+		}
+		else {
+			time += currThread.bursts[currThread.currBurst].CPU_time;
+			service_time += currThread.bursts[currThread.currBurst].CPU_time;
+			currThread.total_CPU_time += currThread.bursts[currThread.currBurst].CPU_time;
+			currThread.end_time = time;
+			currThread.turn_around_time = currThread.end_time - currThread.arrival_time;
+			avg_trt_times[currThread.type] += currThread.turn_around_time;
+			processes[currThread.process_id].threads[currThread.thread_id] = currThread;
+			Event event(time, "THREAD_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+		}
+
+		for (int i = 0; i < blockThreads.size(); i++) {
+			IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			if (threadQueue.empty()) {
+				time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			}
+			blockThreads[i].total_IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			Event event(time, "IO_BURST_COMPLETED", currThread, threadQueue.size());
+			events.push_back(event);
+			blockThreads[i].currBurst++;
+			threadQueue.push(blockThreads[i]);
+		}
+		blockThreads.clear();
+	}
+
+	idle_time = time - dispatch_time - service_time;
+	utilization = 100 * ((float) (time - idle_time)) / (float)time;
+	efficiency = 100 * (float) service_time / (float) time; 
+}
+
 void Simulation::iterateCustom() {}

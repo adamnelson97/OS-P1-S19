@@ -20,6 +20,8 @@ int main(int argc, char *argv[]) {
 	bool algorithm = false;
 	string alg_type;
 
+	cout << endl;
+
 	for (int i = 0; i < argc; i++) {
 		if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--per_thread") == 0) { per_thread = true; }
 		if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) { verbose = true; }
@@ -48,9 +50,13 @@ int main(int argc, char *argv[]) {
 	Simulation sim(fileIn);
 	if (algorithm) {
 		if (alg_type == "FCFS") { sim.iterateFCFS(); }
-		if (alg_type == "RR") { sim.iterateRR(); }
-		if (alg_type == "PRIORITY") { sim.iteratePriority(); }
-		if (alg_type == "CUSTOM") { sim.iterateCustom(); }
+		else if (alg_type == "RR") { sim.iterateRR(); }
+		else if (alg_type == "PRIORITY") { sim.iteratePriority(); }
+		else if (alg_type == "CUSTOM") { sim.iterateCustom(); }
+		else {
+			cerr << "Invalid algorithm type." << endl;
+			return -1;
+		}
 	}
 	else sim.iterateFCFS(); // Default algorithm if none is specified
 

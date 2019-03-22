@@ -76,6 +76,7 @@ public:
 	queue<Thread> normQueue;
 	queue<Thread> batQueue;
 	vector<Thread> blockThreads;
+	vector<Thread> threadVec;
 	Thread currThread;
 	Thread prevThread;
 	int curr_process_id;

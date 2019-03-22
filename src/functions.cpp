@@ -33,6 +33,7 @@ bool isTextFile (string const &fileName, string const &ending) {
 
 // Don't Change!
 int writeOutput(Simulation sim, bool verbose, bool per_thread) {
+	cout << endl;
 	if (per_thread) {
 		cout << endl;
 		for (int i = 0; i < sim.num_processes; i++) {
