@@ -225,7 +225,7 @@ void Simulation::iterateRR() {
 			}
 		}
 		for (int i = 0; i < blockThreads.size(); i++) {
-			currThread.total_IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
+			IO_time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
 			if (threadQueue.empty()) {
 				time += blockThreads[i].bursts[blockThreads[i].currBurst].IO_time;
 			}
