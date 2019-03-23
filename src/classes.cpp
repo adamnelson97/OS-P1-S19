@@ -56,6 +56,7 @@ Simulation::Simulation(ifstream& input) {
 			thread.total_CPU_time = 0; // Initialize total processing times for the thread
 			thread.total_IO_time = 0;
 			thread.start_time = -1;
+			thread.currBurst = 0;
 
 			for (int k = 0; k < thread.num_bursts; k++) {
 				Burst burst; // Create burst object
